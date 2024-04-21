@@ -6,15 +6,15 @@ import java.nio.file.Path;
 import java.util.Random;
 
 public class WordManager {
+
+    public static Path PATH = Path.of("./source/words.txt");
     
     public static String random(){
         String word = "";
         String allWords = "";
         Random random = new Random();
 
-        Path path = Path.of("./source/words.txt");
-
-        try {allWords = Files.readString(path);} catch (IOException e){};
+        try {allWords = Files.readString(PATH);} catch (IOException e){};
 
         String[] words = allWords.split("\n");
         word = words[random.nextInt(words.length)];
@@ -24,8 +24,7 @@ public class WordManager {
 
     public static void printWords(){
         String allWords = "";
-        Path path = Path.of("./source/words.txt");
-        try {allWords = Files.readString(path);} catch (IOException e){};
+        try {allWords = Files.readString(PATH);} catch (IOException e){};
 
         System.out.println(allWords);
     }
@@ -34,14 +33,33 @@ public class WordManager {
 
         word = word.toLowerCase(); // se tiver acento ferrou / TO-DO: resolver isso
 
-        Path path = Path.of("./source/words.txt");
         String allWords = "";
         try {
-            allWords = Files.readString(path);
-            Files.writeString(path, allWords + word + "\n");
+            allWords = Files.readString(PATH);
+            Files.writeString(PATH, allWords + word + "\n");
         } catch (IOException e) {e.printStackTrace();}
     }
 
-    //TO-DO: delete word method
+    public static void deleteWord(String word){
+        String allOldWords = "";
+        try {allOldWords = Files.readString(PATH);} catch (IOException e){};
+        String allNewWords = "";
+
+        String[] oldWordArray = allOldWords.split("\n");
+        String[] newWordArray = new String[oldWordArray.length];
+
+        for (int i = 0; i < oldWordArray.length; i++){ // Adicionando as palavras que devem ficar, no novo array
+            boolean notToDelete = !(oldWordArray[i].equals(word));
+
+            if (notToDelete) newWordArray[i] = oldWordArray[i]; // Isso aqui deixa alguns nulls, mas não tem problema
+        }
+
+        for (String newWord : newWordArray) if (newWord != null) allNewWords += newWord + "\n";
+        
+        try {Files.writeString(PATH, allNewWords);} // Escrevendo no arquivo tudo novamente sem a palavra desejada
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
