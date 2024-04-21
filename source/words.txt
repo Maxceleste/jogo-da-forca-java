@@ -1,1 +1,7 @@
-batata cenoura urso jacare 
+batata
+cenoura
+urso
+jacare
+macaco
+laranja
+mexerica
