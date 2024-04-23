@@ -1,6 +1,6 @@
 batata
 cenoura
 urso
-jacare
 macaco
 laranja
+abelha
