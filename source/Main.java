@@ -16,7 +16,7 @@ public class Main{
         */
 
         
-        //Game.run();
+        Game.run();
     }
 
 }

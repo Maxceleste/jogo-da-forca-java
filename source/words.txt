@@ -4,4 +4,3 @@ urso
 jacare
 macaco
 laranja
-teste
