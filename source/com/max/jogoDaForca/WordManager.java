@@ -3,61 +3,47 @@ package source.com.max.jogoDaForca;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class WordManager {
 
     public static Path PATH = Path.of("./source/words.txt");
+    private static List<String> words = new ArrayList<>();
+
+    static {
+        try{
+            words = Files.readAllLines(PATH);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
     
     public static String random(){
-        String word = "";
-        String allWords = "";
         Random random = new Random();
-
-        try {allWords = Files.readString(PATH);} catch (IOException e){};
-
-        String[] words = allWords.split("\n");
-        word = words[random.nextInt(words.length)];
-
-        return word;
+        return words.get(random.nextInt(words.size()));
     }
 
     public static void printWords(){
-        String allWords = "";
-        try {allWords = Files.readString(PATH);} catch (IOException e){};
-
-        System.out.println(allWords);
+        words.forEach(System.out::println);
     }
 
     public static void newWord(String word){
-
-        word = word.toLowerCase(); // se tiver acento ferrou / TO-DO: resolver isso
-
-        String allWords = "";
-        try {
-            allWords = Files.readString(PATH);
-            Files.writeString(PATH, allWords + word + "\n");
-        } catch (IOException e) {e.printStackTrace();}
+        word = word.toLowerCase();
+        words.add(word);
+        saveWords();
     }
 
     public static void deleteWord(String word){
-        String allOldWords = "";
-        try {allOldWords = Files.readString(PATH);} catch (IOException e){};
-        String allNewWords = "";
+        words.remove(word);
+        saveWords();
+    }
 
-        String[] oldWordArray = allOldWords.split("\n");
-        String[] newWordArray = new String[oldWordArray.length];
-
-        for (int i = 0; i < oldWordArray.length; i++){ // Adicionando as palavras que devem ficar, no novo array
-            boolean notToDelete = !(oldWordArray[i].equals(word));
-
-            if (notToDelete) newWordArray[i] = oldWordArray[i]; // Isso aqui deixa alguns nulls, mas não tem problema
-        }
-
-        for (String newWord : newWordArray) if (newWord != null) allNewWords += newWord + "\n";
-        
-        try {Files.writeString(PATH, allNewWords);} // Escrevendo no arquivo tudo novamente sem a palavra desejada
-        catch (IOException e) {
+    private static void saveWords() {
+        try {
+            Files.write(PATH, words);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
