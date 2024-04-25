@@ -6,7 +6,7 @@ Este é um jogo da forca simples implementado em Java.
 
 1. **Clone o repositório:**
    ```bash
-   git clone https://github.com/seuusuario/seuprojeto.git](https://github.com/Maxceleste/jogo-da-forca-java.git
+   git clone https://github.com/Maxceleste/jogo-da-forca-java.git
    ```
 
 2. **Compile o código:**
