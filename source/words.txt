@@ -3,4 +3,5 @@ cenoura
 urso
 macaco
 laranja
-abelha
+teclado
+rato

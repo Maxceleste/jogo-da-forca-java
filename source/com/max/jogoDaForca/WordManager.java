@@ -47,5 +47,4 @@ public class WordManager {
             e.printStackTrace();
         }
     }
-
 }

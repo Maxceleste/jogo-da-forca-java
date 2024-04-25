@@ -1,22 +1,31 @@
 package source.com.max.jogoDaForca;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Game {
 
+    private static Scanner scanner = new Scanner(System.in);
+
     public static void run(){
-        Scanner scanner = new Scanner(System.in);
         String option = "";
-
         introduction();
-        System.out.println("Agora, deseja adicionar/remover palavras ao jogo ou jogar?\nDigite o número das opções:");
-        System.out.println("1 - Adicionar/remover palavra\n2 - Jogar\n");
-        
-        option = scanner.nextLine();
+        do {
+            System.out.println("\nAgora, deseja adicionar/remover palavras ao jogo ou jogar?\nDigite o número das opções:");
+            System.out.println("1 - Adicionar/remover palavra\n2 - Jogar\n3 - Sair");
+            
+            option = scanner.nextLine();
 
-        if (option.equals("1")) manageWord();
+            if (option.equals("1")) {
+                manageWord();
+            } else if (option.equals("2")) {
+                playGame();
+            } else if (!option.equals("3")) {
+                System.out.println("Opção inválida. Por favor, tente novamente.");
+            }
+        } while (!option.equals("3"));
 
-        playGame();
         scanner.close();
     }
 
@@ -26,13 +35,14 @@ public class Game {
     }
 
     private static void manageWord(){
-        Scanner scanner = new Scanner(System.in);
         String option = "";
         while (true){
             System.out.println("\nVocê deseja adicionar ou remover palavras?\n1 - Adicionar\n2 - Remover\n3 - Sair\n");
             option = scanner.nextLine();
 
             if (option.equals("1")){
+                System.out.println("As seguintes palavras estão presentes no jogo: \n");
+                WordManager.printWords();
                 System.out.println("Digite a nova palavra que deseja Adicionar:");
                 option = scanner.nextLine();
                 WordManager.newWord(option);
@@ -50,14 +60,75 @@ public class Game {
 
             if (option.equals("3")) break;
         }
+    }
 
-        scanner.close();
+    private static void printWord (String[] word){
+        for (String character : word){
+            System.out.print(character);
+        }
     }
 
     private static void playGame(){
+        String[] word = (WordManager.random()).split(""); // array das letras
+        String[] hiddenWord = new String[word.length]; // array das letras para o jogador descobrir
+        for (int i = 0; i < hiddenWord.length; i++) hiddenWord[i] = "_"; 
+        boolean isRunning = true;
+        List<String> triedChars = new ArrayList<>(); // Lista das letras tentadas
+        int tries = 6; // Pontos de vida
+        int points = 0; // Pontos para ganhar se for igual ao tamanho da palavra
 
-        
-    }
+        System.out.println("Vamos agora ao jogo da forca!");
 
-    
+        while(isRunning){
+
+            String guess = " ";
+            boolean rigthGuess = false;
+
+            System.out.print("Palpites: ");
+            for (String character : triedChars){
+                System.out.print(character + " ");
+            }
+            System.out.println("");
+
+            System.out.println("Tentativas restantes: " + tries + "\n");
+
+            printWord(hiddenWord);
+
+            System.out.println("\n\n Dê o seu palpite de letra:");
+            guess = scanner.nextLine();
+
+            for (int i = 0; i < word.length ; i++){ // Checando se a letra está na palavra e substituindo os _
+                if (guess.equals(word[i]) && !(guess.equals(hiddenWord[i]))){ //Está na palavra e não foi tentado
+                    rigthGuess = true;
+                    hiddenWord[i] = guess;
+                    points++; 
+                }
+            }
+
+            triedChars.add(guess);
+
+            if (!rigthGuess){
+                System.out.println("Errou uma letra! -1 tentativa.");
+                tries--;
+            }else{
+                System.out.println("Acertou uma letra!");
+            }
+
+            if (points == hiddenWord.length){
+                System.out.println("Parabéns você acertou todas as letras!");
+                System.out.print("A palavra era: ");
+                printWord(word);
+                System.out.println(""); // Só pra pular linha
+                isRunning = false;
+            }
+
+            if (tries == 0){
+                System.out.println("Sinto muito, você perdeu.");
+                System.out.print("A palavra era: ");
+                printWord(word);
+                System.out.println(""); // Só pra pular linha
+                isRunning = false;
+            }
+        }        
+    }    
 }
